@@ -312,8 +312,9 @@ class MainActivity : AppCompatActivity() {
             Toast.LENGTH_SHORT
         ).show()
 
-        if (isServiceRunning) {
-            // 复用既有刷新路径：handleEnable() 会重新读取仓库并更新悬浮层
+        if (isServiceRunning && serviceBinder?.isManualBypass() != true) {
+            // Reuse the existing refresh path: handleEnable() re-reads the repository and
+            // updates the overlay. Skipped while manually paused, so applying does not resume blocking.
             ContextCompat.startForegroundService(
                 this,
                 Intent(this, OverlayService::class.java).apply {
