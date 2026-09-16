@@ -10,6 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -202,6 +204,8 @@ class MainActivity : AppCompatActivity() {
             settingsPrefs.edit().putBoolean("auto_bypass_displaced", isChecked).apply()
         }
 
+        binding.btnApplyCoordinates.setOnClickListener { applyTypedCoordinates() }
+
         binding.btnRecordGesture.setOnClickListener { handleRecordGestureClick() }
 
         binding.switchFab.isChecked = settingsPrefs.getBoolean("fab_visible", true)
@@ -252,6 +256,74 @@ class MainActivity : AppCompatActivity() {
             R.string.coordinates_format,
             area.leftPx, area.topPx, area.widthPx, area.heightPx
         )
+        // 同步回填输入框：重置、编辑器返回、应用坐标都走这一条路径
+        setIfChanged(binding.etLeft, area.leftPx.toString())
+        setIfChanged(binding.etTop, area.topPx.toString())
+        setIfChanged(binding.etWidth, area.widthPx.toString())
+        setIfChanged(binding.etHeight, area.heightPx.toString())
+    }
+
+    /** 仅在文本确实不同时写入，避免用户正在输入时光标被重置 */
+    private fun setIfChanged(field: EditText, value: String) {
+        if (field.text?.toString() != value) field.setText(value)
+    }
+
+    /** 读取四个输入框，校验并保存屏蔽区域 */
+    private fun applyTypedCoordinates() {
+        val left = binding.etLeft.text?.toString()?.trim()?.toIntOrNull()
+        val top = binding.etTop.text?.toString()?.trim()?.toIntOrNull()
+        val width = binding.etWidth.text?.toString()?.trim()?.toIntOrNull()
+        val height = binding.etHeight.text?.toString()?.trim()?.toIntOrNull()
+
+        if (left == null || top == null || width == null || height == null) {
+            Toast.makeText(this, R.string.toast_coordinates_invalid, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val raw = BlockArea(
+            leftPx = left,
+            topPx = top,
+            widthPx = width,
+            heightPx = height,
+            savedDisplayWidthPx = displayWidthPx,
+            savedDisplayHeightPx = displayHeightPx
+        )
+        // 与 OverlayService.handleEnable() 使用完全相同的 clamp 参数
+        val clamped = raw.clamp(
+            displayWidthPx = displayWidthPx,
+            displayHeightPx = displayHeightPx,
+            marginPx = 0,
+            minSizePx = DisplayHelper.dp(this, 72f)
+        )
+
+        repository.save(clamped)
+        currentArea = clamped
+        // 回填输入框，让用户看到修正后的真实值
+        renderCoordinates()
+
+        val adjusted = clamped.leftPx != raw.leftPx ||
+            clamped.topPx != raw.topPx ||
+            clamped.widthPx != raw.widthPx ||
+            clamped.heightPx != raw.heightPx
+        Toast.makeText(
+            this,
+            if (adjusted) R.string.toast_coordinates_adjusted
+            else R.string.toast_coordinates_applied,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        if (isServiceRunning) {
+            // 复用既有刷新路径：handleEnable() 会重新读取仓库并更新悬浮层
+            ContextCompat.startForegroundService(
+                this,
+                Intent(this, OverlayService::class.java).apply {
+                    action = OverlayService.ACTION_ENABLE
+                }
+            )
+        }
+
+        getSystemService(InputMethodManager::class.java)
+            ?.hideSoftInputFromWindow(binding.root.windowToken, 0)
     }
 
     private fun renderState() {

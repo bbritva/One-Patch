@@ -18,6 +18,14 @@
     <string name="coordinates_format">X:%1$d  Y:%2$d  W:%3$d  H:%4$d</string>
     <string name="size_format">%1$d × %2$d</string>
     <string name="coordinates_content_desc">屏蔽区域当前坐标和尺寸</string>
+    <string name="coord_hint_x">左边距 X</string>
+    <string name="coord_hint_y">上边距 Y</string>
+    <string name="coord_hint_w">宽度 W</string>
+    <string name="coord_hint_h">高度 H</string>
+    <string name="action_apply_coordinates">应用输入的坐标</string>
+    <string name="toast_coordinates_applied">已应用坐标</string>
+    <string name="toast_coordinates_invalid">请输入有效的数字</string>
+    <string name="toast_coordinates_adjusted">数值超出屏幕范围，已自动修正</string>
     <string name="fullscreen_hint">直接拖拽屏幕：中心移动，四角缩放</string>
     <string name="fullscreen_coordinates_format">X:%1$d  Y:%2$d  %3$d × %4$d</string>
     <string name="toast_reset_done">已恢复默认区域</string>
