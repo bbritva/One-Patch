@@ -18,6 +18,14 @@
     <string name="coordinates_format">X:%1$d  Y:%2$d  W:%3$d  H:%4$d</string>
     <string name="size_format">%1$d × %2$d</string>
     <string name="coordinates_content_desc">Current coordinates and dimensions of the blocked area</string>
+    <string name="coord_hint_x">Left X</string>
+    <string name="coord_hint_y">Top Y</string>
+    <string name="coord_hint_w">Width W</string>
+    <string name="coord_hint_h">Height H</string>
+    <string name="action_apply_coordinates">Apply entered coordinates</string>
+    <string name="toast_coordinates_applied">Coordinates applied</string>
+    <string name="toast_coordinates_invalid">Enter valid numbers</string>
+    <string name="toast_coordinates_adjusted">Values were outside the screen. They were corrected automatically</string>
     <string name="fullscreen_hint">Drag directly on the screen: move from the center, resize from the corners</string>
     <string name="fullscreen_coordinates_format">X:%1$d  Y:%2$d  %3$d × %4$d</string>
     <string name="toast_reset_done">Default area restored</string>
