@@ -16,3 +16,6 @@ keystore.properties
 /app/release/
 *.apk
 *.aab
+
+# Kotlin 2.0 daemon residue
+.kotlin/
