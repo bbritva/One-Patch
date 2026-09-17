@@ -256,8 +256,8 @@ class OverlayView @JvmOverloads constructor(
         if (letterbox.isEmpty) return
 
         val minSizeView = if (screenWidthPx > 0)
-            DisplayHelper.dpF(context, 72f) * letterbox.width() / screenWidthPx.toFloat()
-        else DisplayHelper.dpF(context, 72f)
+            BlockArea.MIN_SIZE_PX * letterbox.width() / screenWidthPx.toFloat()
+        else BlockArea.MIN_SIZE_PX.toFloat()
 
         val w = max(rect.width(), minSizeView).coerceAtMost(letterbox.width())
         val h = max(rect.height(), minSizeView).coerceAtMost(letterbox.height())

@@ -92,6 +92,14 @@ data class BlockArea(
 
     companion object {
         /**
+         * Minimum width/height of a block area, in RAW PIXELS (not dp).
+         *
+         * Deliberately far below finger-drag resolution: the numeric coordinate inputs let the
+         * user type an exact rect, and that needs precision a drag gesture cannot reach.
+         */
+        const val MIN_SIZE_PX = 12
+
+        /**
          * 创建默认矩形（屏幕中心、约 60%x20% 大小）
          */
         fun default(displayWidthPx: Int, displayHeightPx: Int): BlockArea {

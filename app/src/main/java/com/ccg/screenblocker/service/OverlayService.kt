@@ -230,7 +230,7 @@ class OverlayService : Service() {
                 displayWidthPx = dw,
                 displayHeightPx = dh,
                 marginPx = 0,
-                minSizePx = DisplayHelper.dp(this, 72f)
+                minSizePx = BlockArea.MIN_SIZE_PX
             )
         currentArea = area
         repository.save(area)
@@ -860,7 +860,7 @@ class OverlayService : Service() {
                 displayWidthPx = dw,
                 displayHeightPx = dh,
                 marginPx = 0,
-                minSizePx = DisplayHelper.dp(this, 72f)
+                minSizePx = BlockArea.MIN_SIZE_PX
             )
         currentArea = rescaled
         repository.save(rescaled)

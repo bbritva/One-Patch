@@ -293,7 +293,7 @@ class MainActivity : AppCompatActivity() {
             displayWidthPx = displayWidthPx,
             displayHeightPx = displayHeightPx,
             marginPx = 0,
-            minSizePx = DisplayHelper.dp(this, 72f)
+            minSizePx = BlockArea.MIN_SIZE_PX
         )
 
         repository.save(clamped)
