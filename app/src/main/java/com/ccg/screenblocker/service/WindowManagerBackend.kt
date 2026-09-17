@@ -90,9 +90,13 @@ class WindowManagerBackend(
             area.widthPx,
             area.heightPx,
             type,
+            // FLAG_LAYOUT_NO_LIMITS lets the overlay extend past the unobstructed area, so it can
+            // cover the bottom gesture strip and the rounded-corner region. FullscreenEditorActivity
+            // already uses this flag, so the runtime overlay now matches what the editor shows.
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
@@ -100,8 +104,13 @@ class WindowManagerBackend(
             y = area.topPx
             title = "OnePatchOverlay"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                // ALWAYS is API 30+; keep SHORT_EDGES on 28-29 where ALWAYS does not exist.
                 layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                    } else {
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    }
             }
         }
     }
